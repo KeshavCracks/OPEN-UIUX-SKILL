@@ -3,8 +3,7 @@
 An agent skill for building websites that look **designed** rather than generated.
 
 Distilled from statistical and structural analysis of **328 production-grade website
-prompts** (~2.87M characters) from [motionsites.ai](https://motionsites.ai), collected in
-[`xianxian-sensen/motionsites-prompts`](https://github.com/xianxian-sensen/motionsites-prompts).
+prompts** from [motionsites.ai](https://motionsites.ai)
 
 > **The core finding:** "premium" is not a visual style — it is a *level of specificity*.
 > The average corpus prompt spends 8,755 characters on what is often a single hero
@@ -114,8 +113,7 @@ This regenerates `assets/`, `examples/`, and `local/motionsites-all-prompts.{md,
 
 ## Attribution & license
 
-- **Prompt corpus:** [xianxian-sensen/motionsites-prompts](https://github.com/xianxian-sensen/motionsites-prompts),
-  released under the [Unlicense](https://unlicense.org) (public domain), scraped from
+- **Prompt corpus:** scraped from
   [motionsites.ai](https://motionsites.ai).
 - **This skill** — the taxonomy, analysis, distilled design guidance, and tooling — is
   MIT licensed. See [LICENSE](LICENSE).
