@@ -1,0 +1,18 @@
+# Local-only verbatim mirror of the upstream MotionSites corpus (~5.8 MB).
+# Regenerate with:
+#   git clone --depth 1 https://github.com/xianxian-sensen/motionsites-prompts /tmp/msp
+#   python3 scripts/build_corpus.py --src /tmp/msp --out .
+local/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
