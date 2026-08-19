@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Open UI/UX — the skill, applied to itself</title>
+<meta name="description" content="A demonstration page built entirely by following the OPEN-UIUX-SKILL rules: neutral ground, one accent, fluid clamp() type, expo-out motion." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ─────────────────────────────────────────────────────────────
+   Tokens — straight from references/design-system.md
+   ───────────────────────────────────────────────────────────── */
+:root{
+  --bg:#0a0a0a; --bg-elev:#141414;
+  --fg:#f5f5f5; --fg-muted:rgba(245,245,245,.62); --fg-subtle:rgba(245,245,245,.38);
+  --line:rgba(255,255,255,.10); --line-strong:rgba(255,255,255,.20);
+  --accent:#ffda00; --accent-ink:#0a0a0a;
+
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  --ease-std:cubic-bezier(.4,0,.2,1);
+
+  --fs-display:clamp(40px,8vw,118px);
+  --fs-h2:clamp(30px,4vw,56px);
+  --fs-h3:clamp(20px,2vw,26px);
+  --fs-lead:clamp(17px,1.6vw,22px);
+  --fs-body:clamp(15px,1.15vw,17px);
+  --fs-label:11px;
+
+  --gutter:clamp(20px,5vw,88px);
+  --section:clamp(72px,11vh,168px);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg); color:var(--fg);
+  font-family:'Inter',system-ui,sans-serif; font-size:var(--fs-body);
+  line-height:1.6; letter-spacing:-.01em;
+  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+  overflow-x:clip;
+}
+.serif{font-family:'Instrument Serif',Georgia,serif; font-style:italic; font-weight:400}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace}
+.wrap{max-width:1320px;margin-inline:auto;padding-inline:var(--gutter)}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+
+/* grain — references/effects-cookbook.md §12 */
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:80;opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* eyebrow — layout-patterns.md §3 */
+.eyebrow{
+  font-family:'JetBrains Mono',monospace;font-size:var(--fs-label);
+  text-transform:uppercase;letter-spacing:.24em;color:var(--fg-subtle);
+}
+
+/* scroll reveal — motion.md §3 */
+[data-reveal]{opacity:0;transform:translateY(20px);
+  transition:opacity .8s var(--ease-out),transform .8s var(--ease-out)}
+[data-reveal].in{opacity:1;transform:none}
+
+/* ── nav ───────────────────────────────────────────────────── */
+header{
+  position:fixed;inset:0 0 auto;z-index:70;
+  transition:background-color .3s var(--ease-std),border-color .3s var(--ease-std),backdrop-filter .3s;
+  border-bottom:1px solid transparent;
+}
+header[data-scrolled="true"]{
+  background:rgba(10,10,10,.72);backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);border-bottom-color:var(--line);
+}
+.nav{display:flex;align-items:center;justify-content:space-between;height:72px}
+.brand{display:flex;align-items:center;gap:10px;font-size:17px;letter-spacing:-.02em}
+.brand svg{width:20px;height:20px}
+.nav-links{display:none;gap:34px}
+.nav-links a{font-size:13.5px;color:var(--fg-muted);transition:color .2s var(--ease-std)}
+.nav-links a:hover{color:var(--fg)}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;border-radius:999px;
+  padding:13px 26px;font-size:13.5px;font-weight:500;white-space:nowrap;
+  transition:transform .2s var(--ease-std),background-color .2s,border-color .2s,color .2s;
+}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--accent);color:var(--accent-ink)}
+.btn-primary:hover{transform:scale(1.02)}
+.btn-ghost{border:1px solid var(--line-strong);color:var(--fg)}
+.btn-ghost:hover{border-color:rgba(255,255,255,.42);background:rgba(255,255,255,.05)}
+.btn-sm{padding:9px 18px;font-size:13px}
+.btn .arw{transition:transform .3s var(--ease-out)}
+.btn:hover .arw{transform:translateX(4px)}
+
+/* ── hero: full-bleed + oversized type ─────────────────────── */
+.hero{position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;
+  padding-block:120px var(--section);overflow:hidden}
+/* cursor spotlight — effects-cookbook.md §1 (CSS variant) */
+.spot{position:absolute;inset:0;pointer-events:none;z-index:1;
+  background:radial-gradient(520px circle at var(--mx,50%) var(--my,32%),rgba(255,218,0,.09),transparent 68%);
+  transition:opacity .5s var(--ease-out)}
+.grid-bg{position:absolute;inset:0;z-index:0;opacity:.5;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:88px 88px;
+  -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 40%,#000,transparent 78%);
+          mask-image:radial-gradient(ellipse 80% 60% at 50% 40%,#000,transparent 78%)}
+.hero .wrap{position:relative;z-index:10;width:100%}
+.hero-top{display:flex;flex-direction:column;gap:22px;margin-bottom:52px;max-width:640px}
+h1{
+  font-size:var(--fs-display);line-height:.92;letter-spacing:-.045em;font-weight:400;
+}
+h1 .line{display:block;overflow:hidden}
+h1 .line > span{display:block;transform:translateY(110%);
+  transition:transform 1s var(--ease-out)}
+.loaded h1 .line > span{transform:none}
+h1 .line:nth-child(2) > span{transition-delay:.09s}
+h1 .line:nth-child(3) > span{transition-delay:.18s}
+.hero-lead{font-size:var(--fs-lead);color:var(--fg-muted);max-width:44ch;line-height:1.55;
+  opacity:0;transform:translateY(16px);transition:opacity .8s var(--ease-out) .5s,transform .8s var(--ease-out) .5s}
+.loaded .hero-lead{opacity:1;transform:none}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;
+  opacity:0;transform:translateY(16px);transition:opacity .8s var(--ease-out) .62s,transform .8s var(--ease-out) .62s}
+.loaded .hero-cta{opacity:1;transform:none}
+/* asymmetric bottom rail — never center everything */
+.hero-rail{display:grid;gap:28px;border-top:1px solid var(--line);padding-top:26px;
+  opacity:0;transition:opacity .9s var(--ease-out) .8s}
+.loaded .hero-rail{opacity:1}
+.stat .n{font-size:clamp(26px,3.4vw,42px);line-height:1;letter-spacing:-.03em;
+  font-variant-numeric:tabular-nums}
+.stat .k{margin-top:8px;color:var(--fg-subtle);font-size:12.5px}
+.accent{color:var(--accent)}
+
+/* ── sections ──────────────────────────────────────────────── */
+section{padding-block:var(--section)}
+.head{display:flex;flex-direction:column;gap:16px;max-width:760px;margin-bottom:56px}
+h2{font-size:var(--fs-h2);line-height:1.02;letter-spacing:-.035em;font-weight:400}
+.head p{color:var(--fg-muted);max-width:56ch}
+
+/* bento — layout-patterns.md §4 */
+.bento{display:grid;grid-template-columns:1fr;gap:14px}
+.card{
+  position:relative;border:1px solid var(--line);border-radius:16px;
+  background:rgba(255,255,255,.03);padding:28px;overflow:hidden;
+  transition:transform .3s var(--ease-out),border-color .3s var(--ease-out);
+}
+.card:hover{transform:translateY(-4px);border-color:var(--line-strong)}
+/* gradient border — effects-cookbook.md §3 */
+.card::before{
+  content:'';position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;
+  background:linear-gradient(135deg,rgba(255,255,255,.32),transparent 55%);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  opacity:0;transition:opacity .35s var(--ease-out);
+}
+.card:hover::before{opacity:1}
+.card .ico{width:20px;height:20px;stroke:var(--fg-muted);stroke-width:1.5;fill:none}
+.card h3{font-size:var(--fs-h3);margin-top:22px;letter-spacing:-.02em;font-weight:500;line-height:1.25}
+.card p{margin-top:9px;color:var(--fg-muted);font-size:14.5px;line-height:1.6}
+.card-lead{background:linear-gradient(160deg,rgba(255,218,0,.07),rgba(255,255,255,.02))}
+.card-lead .num{font-size:clamp(44px,7vw,84px);line-height:.9;letter-spacing:-.05em;
+  font-variant-numeric:tabular-nums}
+
+/* rules list */
+.rules{border-top:1px solid var(--line)}
+.rule{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:baseline;
+  border-bottom:1px solid var(--line);padding:26px 0;
+  transition:background-color .3s var(--ease-std),padding-inline .3s var(--ease-out)}
+.rule:hover{background:rgba(255,255,255,.022);padding-inline:14px}
+.rule .idx{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--fg-subtle)}
+.rule h3{font-size:clamp(19px,2.1vw,25px);letter-spacing:-.025em;font-weight:400;line-height:1.3}
+.rule p{color:var(--fg-muted);font-size:14.5px;margin-top:7px;max-width:62ch}
+
+/* marquee — effects-cookbook.md §5 */
+.marq{position:relative;overflow:hidden;border-block:1px solid var(--line);padding-block:22px;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+          mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.marq-track{display:flex;width:max-content;animation:scroll 38s linear infinite}
+.marq:hover .marq-track{animation-play-state:paused}
+@keyframes scroll{to{transform:translateX(-50%)}}
+.marq span{padding-inline:26px;color:var(--fg-subtle);font-size:13px;white-space:nowrap;
+  font-family:'JetBrains Mono',monospace}
+.marq span::after{content:'·';margin-left:26px;color:rgba(255,255,255,.16)}
+
+/* cta */
+.cta-box{border:1px solid var(--line);border-radius:22px;padding:clamp(34px,6vw,80px);
+  background:radial-gradient(120% 140% at 50% 0%,rgba(255,218,0,.07),transparent 62%);text-align:center}
+.cta-box h2{max-width:16ch;margin-inline:auto}
+.cta-box p{color:var(--fg-muted);max-width:50ch;margin:18px auto 30px}
+.cta-actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding-top:64px;overflow:hidden}
+.foot-grid{display:grid;grid-template-columns:1fr;gap:36px;margin-bottom:56px}
+.foot-col h4{font-size:12px;text-transform:uppercase;letter-spacing:.2em;color:var(--fg-subtle);margin-bottom:16px;font-weight:500}
+.foot-col a{display:block;color:var(--fg-muted);font-size:14px;padding-block:5px;transition:color .2s}
+.foot-col a:hover{color:var(--fg)}
+/* oversized wordmark — layout-patterns.md §7 */
+.wordmark{font-size:clamp(58px,15.5vw,250px);line-height:.8;letter-spacing:-.055em;
+  color:rgba(255,255,255,.045);white-space:nowrap;user-select:none;font-weight:400;
+  margin-bottom:-.14em}
+.foot-bar{display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;
+  border-top:1px solid var(--line);padding-block:24px;color:var(--fg-subtle);font-size:12.5px}
+.foot-bar a{text-decoration:underline;text-underline-offset:3px}
+
+/* progress bar */
+.prog{position:fixed;inset:0 0 auto;height:2px;background:var(--accent);z-index:90;
+  transform:scaleX(0);transform-origin:left}
+
+/* ── responsive — design-system.md §6 ──────────────────────── */
+@media (min-width:768px){
+  .bento{grid-template-columns:repeat(3,1fr)}
+  .card-lead{grid-column:span 2;grid-row:span 2}
+  .card-wide{grid-column:span 3}
+  .hero-rail{grid-template-columns:repeat(4,1fr)}
+  .foot-grid{grid-template-columns:2fr 1fr 1fr 1fr}
+  .hero-top{max-width:none}
+}
+@media (min-width:1024px){ .nav-links{display:flex} }
+@media (max-width:767px){
+  .hero-rail{grid-template-columns:1fr 1fr}
+  .rule{grid-template-columns:1fr;gap:6px}
+}
+
+/* reduced motion — motion.md §9 */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms!important;animation-iteration-count:1!important;
+    transition-duration:.01ms!important;scroll-behavior:auto!important}
+  [data-reveal]{opacity:1;transform:none}
+  h1 .line > span{transform:none}
+  .hero-lead,.hero-cta,.hero-rail{opacity:1;transform:none}
+  .spot{display:none}
+}
+</style>
+</head>
+<body>
+<div class="prog" id="prog" aria-hidden="true"></div>
+
+<header id="hdr">
+  <div class="wrap nav">
+    <a href="#" class="brand" aria-label="Open UI/UX home">
+      <svg viewBox="0 0 256 256" fill="var(--accent)" aria-hidden="true">
+        <path d="M 256 256 L 128 256 L 0 128 L 128 128 Z M 256 128 L 128 128 L 0 0 L 128 0 Z"/>
+      </svg>
+      <span>Open&nbsp;<span class="serif">UI/UX</span></span>
+    </a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="#method">Method</a>
+      <a href="#evidence">Evidence</a>
+      <a href="#rules">Rules</a>
+      <a href="#start">Install</a>
+    </nav>
+    <a class="btn btn-ghost btn-sm" href="https://github.com/KeshavCracks/OPEN-UIUX-SKILL">
+      GitHub <svg class="arw" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg>
+    </a>
+  </div>
+</header>
+
+<main>
+  <!-- HERO — archetype C: oversized type -->
+  <section class="hero" id="top">
+    <div class="grid-bg" aria-hidden="true"></div>
+    <div class="spot" id="spot" aria-hidden="true"></div>
+    <div class="wrap">
+      <div class="hero-top">
+        <span class="eyebrow">Agent skill · 328 prompts analyzed</span>
+        <h1>
+          <span class="line"><span>Stop shipping</span></span>
+          <span class="line"><span><em class="serif">generic</em> websites.</span></span>
+        </h1>
+      </div>
+      <p class="hero-lead">
+        Premium isn't a style — it's a level of specificity. This skill encodes the exact
+        tokens, curves and rules distilled from 2.87&nbsp;million characters of
+        production design prompts.
+      </p>
+      <div class="hero-cta" style="margin-top:30px">
+        <a class="btn btn-primary" href="#start">
+          Install the skill
+          <svg class="arw" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a class="btn btn-ghost" href="#evidence">See the data</a>
+      </div>
+      <div class="hero-rail" style="margin-top:66px">
+        <div class="stat"><div class="n">328</div><div class="k">prompts analyzed</div></div>
+        <div class="stat"><div class="n">8,755</div><div class="k">avg chars per spec</div></div>
+        <div class="stat"><div class="n accent">1</div><div class="k">accent color, always</div></div>
+        <div class="stat"><div class="n">15</div><div class="k">effect recipes</div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="marq" aria-hidden="true">
+    <div class="marq-track">
+      <span>cubic-bezier(0.16, 1, 0.3, 1)</span><span>clamp(40px, 6.5vw, 105px)</span>
+      <span>tracking-[-0.04em]</span><span>leading-[0.95]</span><span>once: true</span>
+      <span>margin: "-100px"</span><span>backdrop-filter: blur(16px)</span>
+      <span>mask-composite: exclude</span><span>tabular-nums</span>
+      <span>prefers-reduced-motion</span><span>100dvh</span><span>rounded-full</span>
+      <span>cubic-bezier(0.16, 1, 0.3, 1)</span><span>clamp(40px, 6.5vw, 105px)</span>
+      <span>tracking-[-0.04em]</span><span>leading-[0.95]</span><span>once: true</span>
+      <span>margin: "-100px"</span><span>backdrop-filter: blur(16px)</span>
+      <span>mask-composite: exclude</span><span>tabular-nums</span>
+      <span>prefers-reduced-motion</span><span>100dvh</span><span>rounded-full</span>
+    </div>
+  </div>
+
+  <!-- METHOD — bento, one dominant cell -->
+  <section id="method">
+    <div class="wrap">
+      <div class="head" data-reveal>
+        <span class="eyebrow">01 — Method</span>
+        <h2>Four phases, in order. Never skip to code.</h2>
+        <p>The highest-leverage step isn't implementation — it's writing a spec so precise
+           that implementation becomes transcription.</p>
+      </div>
+      <div class="bento">
+        <article class="card card-lead" data-reveal>
+          <div class="num accent">01</div>
+          <h3>Commit to a direction</h3>
+          <p>One reference feeling in 3–6 concrete words. One signature move — exactly one.
+             A real design system with real values. "Modern and clean" is not a direction;
+             it's the absence of one.</p>
+          <p style="margin-top:20px;font-size:13px;color:var(--fg-subtle)" class="mono">
+             wet obsidian precision fintech →<br>cursor-spotlight hero · #ffda00 · Instrument Serif</p>
+        </article>
+        <article class="card" data-reveal>
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h13"/></svg>
+          <h3>Write the build spec</h3>
+          <p>Every element gets an exact size, hex, weight, tracking and easing before a
+             single line is written.</p>
+        </article>
+        <article class="card" data-reveal>
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6l-6 6 6 6M16 6l6 6-6 6"/></svg>
+          <h3>Build</h3>
+          <p>React · Tailwind · TypeScript · Framer Motion — the corpus-dominant stack, with
+             recipes for each effect.</p>
+        </article>
+        <article class="card card-wide" data-reveal>
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+          <h3>Audit against the quality bar</h3>
+          <p>18 instant-tells that mark a page as AI-generated — purple gradients, centered
+             everything, three identical cards, <span class="mono" style="font-size:13px">transition: all</span> —
+             each with the specific fix. Run it before declaring done.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- EVIDENCE -->
+  <section id="evidence">
+    <div class="wrap">
+      <div class="head" data-reveal>
+        <span class="eyebrow">02 — Evidence</span>
+        <h2>Every rule is backed by frequency, not opinion.</h2>
+        <p>Mined from the full corpus. When the docs state a number, it's the number the
+           corpus actually uses.</p>
+      </div>
+      <div class="bento">
+        <article class="card" data-reveal>
+          <span class="eyebrow">Easing</span>
+          <h3 class="mono" style="font-size:16px;margin-top:14px">cubic-bezier(.16,1,.3,1)</h3>
+          <p>The house default — 85 uses, ahead of <span class="mono" style="font-size:13px">(.22,1,.36,1)</span>
+             at 60. Fast start, long graceful settle.</p>
+        </article>
+        <article class="card" data-reveal>
+          <span class="eyebrow">Color</span>
+          <h3>7 of the top 8 are greyscale</h3>
+          <p>#ffffff · #000000 · #1a1a1a · #111111 · #0a0a0a. Premium is neutrals plus
+             restraint — color is punctuation, not paint.</p>
+        </article>
+        <article class="card" data-reveal>
+          <span class="eyebrow">Type</span>
+          <h3>clamp() × 647</h3>
+          <p>Display type is never a fixed size. Tracking tightens to −0.04em as it grows;
+             labels widen to 0.2em.</p>
+        </article>
+        <article class="card" data-reveal>
+          <span class="eyebrow">Motion</span>
+          <h3>600–800ms reveals</h3>
+          <p>Hovers 150–250ms, staggers 60–120ms, total sequence under 1.2s. Only transform
+             and opacity animate.</p>
+        </article>
+        <article class="card" data-reveal>
+          <span class="eyebrow">Top effect</span>
+          <h3>Video backgrounds — 203</h3>
+          <p>Then dark themes (174) and glassmorphism (173). Almost no particles, almost no
+             3D. Restraint wins.</p>
+        </article>
+        <article class="card" data-reveal>
+          <span class="eyebrow">The gap</span>
+          <h3><span class="accent">19 / 328</span> handle reduced motion</h3>
+          <p>The corpus's biggest weakness. The skill makes it non-negotiable instead of
+             inheriting the omission.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- RULES -->
+  <section id="rules">
+    <div class="wrap">
+      <div class="head" data-reveal>
+        <span class="eyebrow">03 — Non-negotiables</span>
+        <h2>Eight rules that separate designed from generated.</h2>
+      </div>
+      <div class="rules">
+        <div class="rule" data-reveal><span class="idx">01</span><div>
+          <h3>Type carries the design</h3>
+          <p>A hero headline is clamp(2.5rem, 8vw, 7rem) — not text-5xl. Tight tracking, tight leading, at scale.</p></div></div>
+        <div class="rule" data-reveal><span class="idx">02</span><div>
+          <h3>Contrast over decoration</h3>
+          <p>Near-black or off-white ground, one accent used once or twice per screen, large fields of empty space.</p></div></div>
+        <div class="rule" data-reveal><span class="idx">03</span><div>
+          <h3>One accent, deployed sparingly</h3>
+          <p>If everything is highlighted, nothing is. Two appearances per viewport is the entire budget.</p></div></div>
+        <div class="rule" data-reveal><span class="idx">04</span><div>
+          <h3>Motion is choreography, not decoration</h3>
+          <p>If a user notices the animation before the content, it's wrong. Guide attention; never compete for it.</p></div></div>
+        <div class="rule" data-reveal><span class="idx">05</span><div>
+          <h3>Never center everything</h3>
+          <p>Asymmetry, off-grid placement and deliberate overflow are what read as art-directed.</p></div></div>
+        <div class="rule" data-reveal><span class="idx">06</span><div>
+          <h3>Real content, always</h3>
+          <p>Plausible product copy, real names, real numbers. No "Lorem ipsum", no "Feature One".</p></div></div>
+        <div class="rule" data-reveal><span class="idx">07</span><div>
+          <h3>Full-bleed first screen</h3>
+          <p>100dvh, one dominant focal element, brand identity legible in under three seconds.</p></div></div>
+        <div class="rule" data-reveal><span class="idx">08</span><div>
+          <h3>Respect the user</h3>
+          <p>Reduced motion, real focus states, alt text, keyboard reach, AA contrast on actual text.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="start">
+    <div class="wrap">
+      <div class="cta-box" data-reveal>
+        <span class="eyebrow">04 — Install</span>
+        <h2 style="margin-top:18px">Give your agent taste before it starts.</h2>
+        <p>Clone into your skills directory. The entry point is SKILL.md; the references
+           load on demand.</p>
+        <div class="cta-actions">
+          <a class="btn btn-primary" href="https://github.com/KeshavCracks/OPEN-UIUX-SKILL">
+            Get the skill
+            <svg class="arw" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a class="btn btn-ghost" href="https://github.com/xianxian-sensen/motionsites-prompts">Source corpus</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-col">
+        <h4>Open UI/UX</h4>
+        <p style="color:var(--fg-muted);font-size:14px;max-width:34ch">
+          A design system distilled from 328 production website prompts, packaged as an
+          agent skill.</p>
+      </div>
+      <div class="foot-col"><h4>References</h4>
+        <a href="#">Design system</a><a href="#">Motion</a><a href="#">Layout patterns</a></div>
+      <div class="foot-col"><h4>Tools</h4>
+        <a href="#">Effects cookbook</a><a href="#">Quality bar</a><a href="#">Spec template</a></div>
+      <div class="foot-col"><h4>Source</h4>
+        <a href="https://github.com/KeshavCracks/OPEN-UIUX-SKILL">Repository</a>
+        <a href="https://github.com/xianxian-sensen/motionsites-prompts">Prompt corpus</a>
+        <a href="https://motionsites.ai">motionsites.ai</a></div>
+    </div>
+    <div class="wordmark" aria-hidden="true">OPEN UI/UX</div>
+    <div class="foot-bar">
+      <span>MIT licensed · corpus under the Unlicense</span>
+      <span>Built by following <a href="https://github.com/KeshavCracks/OPEN-UIUX-SKILL">its own rules</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// entrance
+requestAnimationFrame(() => document.body.classList.add('loaded'));
+
+// scroll reveal — IntersectionObserver, once:true, -100px
+const io = new IntersectionObserver((es) => {
+  es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+}, { rootMargin: '-80px 0px', threshold: .05 });
+document.querySelectorAll('[data-reveal]').forEach((el, i) => {
+  el.style.transitionDelay = `${(i % 6) * 70}ms`;   // stagger, capped
+  io.observe(el);
+});
+
+// nav state + progress, rAF-throttled
+const hdr = document.getElementById('hdr'), prog = document.getElementById('prog');
+let ticking = false;
+addEventListener('scroll', () => {
+  if (ticking) return; ticking = true;
+  requestAnimationFrame(() => {
+    const y = scrollY;
+    hdr.dataset.scrolled = y > 60;
+    const max = document.body.scrollHeight - innerHeight;
+    prog.style.transform = `scaleX(${max > 0 ? y / max : 0})`;
+    ticking = false;
+  });
+}, { passive: true });
+
+// cursor spotlight — desktop + motion-allowed only
+const spot = document.getElementById('spot');
+const okMotion = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (okMotion && matchMedia('(pointer: fine)').matches) {
+  let tx = innerWidth / 2, ty = innerHeight * .32, cx = tx, cy = ty, raf;
+  addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY; }, { passive: true });
+  (function loop() {
+    cx += (tx - cx) * .1; cy += (ty - cy) * .1;          // lerp
+    spot.style.setProperty('--mx', cx + 'px');
+    spot.style.setProperty('--my', cy + 'px');
+    raf = requestAnimationFrame(loop);
+  })();
+  addEventListener('pagehide', () => cancelAnimationFrame(raf));
+} else { spot.style.opacity = 0; }
+</script>
+</body>
+</html>

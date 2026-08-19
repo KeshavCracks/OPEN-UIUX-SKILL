@@ -1,0 +1,250 @@
+{
+ "count": 18,
+ "exemplars": [
+  {
+   "file": "examples/portfolio-cosmic.md",
+   "title": "Portfolio Cosmic",
+   "category": "Portfolio",
+   "effects": [
+    "bento",
+    "blend-mode",
+    "canvas",
+    "counter",
+    "glassmorphism",
+    "glow",
+    "marquee",
+    "parallax",
+    "scroll-pin",
+    "scroll-reveal",
+    "smooth-scroll",
+    "theme-dark",
+    "video-bg"
+   ]
+  },
+  {
+   "file": "examples/cinematic-landing-page.md",
+   "title": "Cinematic Landing Page",
+   "category": "Landing Page",
+   "effects": [
+    "accordion",
+    "carousel",
+    "clip-reveal",
+    "glassmorphism",
+    "horizontal-scroll",
+    "marquee",
+    "scroll-pin",
+    "text-split",
+    "theme-dark",
+    "video-bg"
+   ]
+  },
+  {
+   "file": "examples/oyla.md",
+   "title": "OYLA",
+   "category": "Ecommerce",
+   "effects": [
+    "canvas",
+    "carousel",
+    "glow",
+    "horizontal-scroll",
+    "scroll-pin",
+    "scroll-reveal",
+    "smooth-scroll",
+    "text-split",
+    "theme-dark"
+   ]
+  },
+  {
+   "file": "examples/financial-suite.md",
+   "title": "Financial Suite",
+   "category": "Landing Page",
+   "effects": [
+    "canvas",
+    "cursor-spotlight",
+    "glassmorphism",
+    "parallax",
+    "scroll-pin",
+    "theme-dark"
+   ]
+  },
+  {
+   "file": "examples/global-cta-footer.md",
+   "title": "Global CTA Footer",
+   "category": "CTA",
+   "effects": [
+    "3d-transform",
+    "accordion",
+    "carousel",
+    "glassmorphism",
+    "glow",
+    "scroll-reveal",
+    "video-bg"
+   ]
+  },
+  {
+   "file": "examples/luxury-ecommerce-design.md",
+   "title": "Luxury Ecommerce Design",
+   "category": "Landing Page",
+   "effects": [
+    "carousel",
+    "glassmorphism",
+    "glow",
+    "horizontal-scroll",
+    "scroll-reveal",
+    "smooth-scroll",
+    "theme-dark",
+    "video-bg"
+   ]
+  },
+  {
+   "file": "examples/apex-program-accordion.md",
+   "title": "Apex Program Accordion",
+   "category": "Accordion",
+   "effects": [
+    "accordion",
+    "clip-reveal",
+    "cursor-spotlight",
+    "glassmorphism",
+    "glow",
+    "image-mask",
+    "scroll-reveal",
+    "theme-dark"
+   ]
+  },
+  {
+   "file": "examples/liquid-glass-cta.md",
+   "title": "Liquid Glass CTA",
+   "category": "CTA",
+   "effects": [
+    "blend-mode",
+    "clip-reveal",
+    "glassmorphism",
+    "glow",
+    "image-mask",
+    "theme-dark",
+    "video-bg"
+   ]
+  },
+  {
+   "file": "examples/max-reed-portfolio.md",
+   "title": "Max Reed Portfolio",
+   "category": "Features",
+   "effects": [
+    "blend-mode",
+    "clip-reveal",
+    "glassmorphism",
+    "glow",
+    "image-mask",
+    "marquee",
+    "noise-grain",
+    "theme-dark",
+    "video-bg"
+   ]
+  },
+  {
+   "file": "examples/capabilities-overview.md",
+   "title": "Capabilities Overview",
+   "category": "Features",
+   "effects": [
+    "bento",
+    "clip-reveal",
+    "glassmorphism",
+    "marquee",
+    "orbit",
+    "theme-dark"
+   ]
+  },
+  {
+   "file": "examples/arceage-contact-us.md",
+   "title": "Arceage Contact Us",
+   "category": "Form",
+   "effects": [
+    "clip-reveal",
+    "scroll-reveal",
+    "theme-dark",
+    "typewriter"
+   ]
+  },
+  {
+   "file": "examples/nexacore-process.md",
+   "title": "NexaCore Process",
+   "category": "Process",
+   "effects": [
+    "glassmorphism",
+    "gradient-text",
+    "noise-grain"
+   ]
+  },
+  {
+   "file": "examples/nimbus-demo.md",
+   "title": "Nimbus Demo",
+   "category": "Dashboard Demo",
+   "effects": [
+    "3d-transform",
+    "glow",
+    "tilt"
+   ]
+  },
+  {
+   "file": "examples/movie-premiere.md",
+   "title": "Movie Premiere",
+   "category": "Entertainment",
+   "effects": [
+    "blend-mode",
+    "drag",
+    "glassmorphism",
+    "image-mask",
+    "theme-dark"
+   ]
+  },
+  {
+   "file": "examples/pixel-grid-hover.md",
+   "title": "Pixel Grid Hover",
+   "category": "Case Studies",
+   "effects": [
+    "magnetic",
+    "marquee",
+    "parallax",
+    "scroll-reveal",
+    "theme-dark"
+   ]
+  },
+  {
+   "file": "examples/email-landing-page.md",
+   "title": "Email Landing Page",
+   "category": "Landing page",
+   "effects": [
+    "blend-mode",
+    "clip-reveal",
+    "glassmorphism",
+    "glow",
+    "gradient-text",
+    "horizontal-scroll",
+    "image-mask",
+    "marquee-logos",
+    "noise-grain",
+    "theme-dark",
+    "video-bg"
+   ]
+  },
+  {
+   "file": "examples/nimbus-pricing.md",
+   "title": "NimBus Pricing",
+   "category": "Pricing",
+   "effects": [
+    "glow",
+    "morph"
+   ]
+  },
+  {
+   "file": "examples/nimbus-ops.md",
+   "title": "Nimbus Ops",
+   "category": "CTA",
+   "effects": [
+    "3d-transform",
+    "glow",
+    "particles"
+   ]
+  }
+ ]
+}
